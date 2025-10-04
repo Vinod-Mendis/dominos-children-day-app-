@@ -1,3 +1,5 @@
+/** @format */
+
 "use client";
 
 import React, { useState } from "react";
@@ -19,14 +21,21 @@ export default function ChildrensDayApp() {
   const handleDownload = () => {
     const canvas = document.querySelector("canvas");
     if (canvas) {
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = originalFileName;
-        link.click();
-        URL.revokeObjectURL(url);
-      });
+      // Use JPEG format with quality setting (0.0 to 1.0)
+      canvas.toBlob(
+        (blob) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          // Change extension to .jpg
+          const fileName = originalFileName.replace(/\.[^/.]+$/, ".jpg");
+          link.download = fileName;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+        "image/jpeg", // Specify JPEG format
+        0.9 // Quality: 0.9 = 90% quality (adjust between 0.7-0.95)
+      );
     }
   };
 
@@ -68,8 +77,7 @@ export default function ChildrensDayApp() {
               {!overlayAdded ? (
                 <button
                   onClick={handleAddOverlay}
-                  className="py-4 px-8 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-                >
+                  className="py-4 px-8 bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
                   <Sparkles size={24} />
                   Add Magical Frame
                 </button>
@@ -77,14 +85,12 @@ export default function ChildrensDayApp() {
                 <>
                   <button
                     onClick={() => setOverlayAdded(false)}
-                    className="py-4 px-8 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                  >
+                    className="py-4 px-8 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                     Remove Frame
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-                  >
+                    className="py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
                     <Download size={24} />
                     Download Photo
                   </button>
